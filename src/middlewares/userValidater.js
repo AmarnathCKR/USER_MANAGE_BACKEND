@@ -1,20 +1,52 @@
 const Joi = require('joi');
-const { signupSchema } = require("./yupSchema")
+const { signupSchema, editSchema, editPasswordSchema } = require("./yupSchema")
 
 
 
 const userValidate = async (req, res, next) => {
-    console.log("visited");
-    console.log(signupSchema);
     try {
         req.body = await signupSchema.validate(req.body);
         next();
     } catch (err) {
-        console.log(err)
-        throw res.status(404).send({ message: err.errors[0] })
+        return res.status(404).send({ message: err.errors[0] })
+    }
+
+}
+
+const vaidateEdit = async (req, res, next) => {
+   console.log(req.body);
+    try {
+        req.body = await editSchema.validate(req.body);
+        next();
+    } catch (err) {
+        return res.status(404).send({ message: err.errors[0] })
+    }
+
+}
+const vaidatePassword = async (req, res, next) => {
+    console.log(req.body);
+    try {
+        req.body = await editPasswordSchema.validate(req.body);
+        next();
+    } catch (err) {
+        return res.status(404).send({ message: err.errors[0] })
+    }
+
+}
+
+const postValidate = async (req, res, next) => {
+    console.log(req.body);
+    try {
+        req.body = await postValidate.validate(req.body);
+        next();
+    } catch (err) {
+        return res.status(404).send({ message: err.errors[0] })
     }
 
 }
 
 
-module.exports = userValidate;
+module.exports.userValidate = userValidate;
+module.exports.vaidatePassword = vaidatePassword;
+module.exports.vaidateEdit = vaidateEdit;
+module.exports.postValidate = postValidate;
