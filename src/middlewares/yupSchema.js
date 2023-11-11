@@ -92,11 +92,11 @@ const postSchema = yup.object().shape({
     title: yup
         .string()
         .trim()
-        .required("New Password can not be empty")
+        .required("Title can not be empty")
         .min(100, "Minimum 100 characters")
         .max(200, "Maximum 200 characters"),
 
-    image : yup.string().trim().url().required("invalid image"),
+    image : yup.string().trim().required("invalid image"),
 });
 
 module.exports.signupSchema = signupSchema;

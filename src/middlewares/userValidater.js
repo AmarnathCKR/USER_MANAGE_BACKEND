@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { signupSchema, editSchema, editPasswordSchema } = require("./yupSchema")
+const { signupSchema, editSchema, editPasswordSchema, postSchema } = require("./yupSchema")
 
 
 
@@ -34,10 +34,10 @@ const vaidatePassword = async (req, res, next) => {
 
 }
 
-const postValidate = async (req, res, next) => {
+const validatePost = async (req, res, next) => {
     console.log(req.body);
     try {
-        req.body = await postValidate.validate(req.body);
+        req.body = await postSchema.validate(req.body);
         next();
     } catch (err) {
         return res.status(404).send({ message: err.errors[0] })
@@ -49,4 +49,4 @@ const postValidate = async (req, res, next) => {
 module.exports.userValidate = userValidate;
 module.exports.vaidatePassword = vaidatePassword;
 module.exports.vaidateEdit = vaidateEdit;
-module.exports.postValidate = postValidate;
+module.exports.validatePost = validatePost;

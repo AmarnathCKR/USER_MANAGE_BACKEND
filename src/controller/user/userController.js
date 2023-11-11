@@ -96,6 +96,7 @@ const fetchUser = async (req, res) => {
     const userValid = await User.findOne({ _id: id });
     if (userValid.status) {
         const user = {
+            id : userValid._id,
             email: userValid.email,
             name: userValid.name
         }
@@ -114,6 +115,7 @@ const editUser = async (req, res) => {
         if (userValid.status) {
             const newUser = await User.findByIdAndUpdate(id, { name, email });
             const user = {
+                id : newUser._id,
                 email,
                 name
             }
@@ -140,6 +142,7 @@ const changePassword = async (req, res) => {
                 const hashPassword = await bcrypt.hash(newPass, 10);
                 const newUser = await User.findByIdAndUpdate(id, { password: hashPassword });
                 const user = {
+                    id : newUser._id,
                     email: newUser.email,
                     name: newUser.name
                 }
@@ -163,7 +166,7 @@ const createPost = async (req,res)=>{
         const {id}=req.params;
         const {title,image}=req.body;
         newPost = new Post({
-            useId : id,
+            userId : id,
             title,
             image
         })
@@ -178,7 +181,8 @@ const createPost = async (req,res)=>{
 const editPost = async (req,res)=>{
     try{
         const {id}=req.params;
-        const {title,image,postId}=req.body;
+        const {title,image}=req.body;
+        const {postId}=req.query;
         await Post.findByIdAndUpdate(postId,{
             title,
             image
@@ -206,6 +210,32 @@ const deletePost = async (req,res)=>{
     }
 }
 
+const fetchMypost = async (req,res)=>{
+    try{
+        const {id}=req.params;
+        
+        const allPost = await Post.find({userId : id}).populate("userId").sort({ createdAt: 'desc'});
+
+        res.status(200).json({load : allPost});
+    }catch(err){
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+}
+
+const fetchAllPost = async (req,res)=>{
+    try{
+        const {id}=req.params;
+        
+        const allPost = await Post.find().populate("userId").sort({ createdAt: 'desc'});
+
+        res.status(200).json({load : allPost});
+    }catch(err){
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+}
+
 
 module.exports.signup = signup;
 module.exports.login = login;
@@ -215,3 +245,5 @@ module.exports.fetchUser = fetchUser;
 module.exports.deletePost = deletePost;
 module.exports.editPost = editPost;
 module.exports.createPost = createPost;
+module.exports.fetchMypost = fetchMypost;
+module.exports.fetchAllPost = fetchAllPost;
