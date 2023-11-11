@@ -19,7 +19,7 @@ const signup = async (req, res) => {
 
         if (user) {
             console.log("User already exists");
-            return res.status(400).json({ error: "User already exists" });
+            return res.status(400).send({ message : "User already exists" });
         }
 
 
@@ -70,7 +70,7 @@ const signup = async (req, res) => {
         return res.status(200).json({ token });
     } catch (error) {
         console.error("Error:", error);
-        return res.status(500).json({ error: "Server error" });
+        return res.status(500).send({ message: "Server error" });
     }
 }
 
